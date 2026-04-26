@@ -2,16 +2,15 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
-    // 1. Read incoming request safely
+    // Read request body
     const body = await req.json();
 
-    console.log("🔥 CHAT ROUTE HIT");
-    console.log("📩 Incoming message:", body);
+    console.log("🔥 API HIT - /api/chat");
+    console.log("📩 Received message:", body);
 
-    // 2. Extract user message (fallback included)
-    const userMessage = body?.message || "";
+    const userMessage = body?.message;
 
-    // 3. Basic safety check
+    // Validate input
     if (!userMessage) {
       return NextResponse.json(
         { reply: "No message received." },
@@ -19,12 +18,11 @@ export async function POST(req: Request) {
       );
     }
 
-    // 4. TEMP AI RESPONSE (replace later with OpenAI or agent logic)
-    const reply = `👋 Hi! You said: "${userMessage}"`;
+    // TEMP RESPONSE (replace later with AI model / OpenAI)
+    const reply = `👋 Hello! You said: "${userMessage}"`;
 
     console.log("🤖 Reply sent:", reply);
 
-    // 5. Return response to frontend
     return NextResponse.json({
       reply,
     });
@@ -32,7 +30,7 @@ export async function POST(req: Request) {
     console.error("❌ API ERROR:", error);
 
     return NextResponse.json(
-      { reply: "Server error occurred." },
+      { reply: "Internal server error." },
       { status: 500 }
     );
   }
