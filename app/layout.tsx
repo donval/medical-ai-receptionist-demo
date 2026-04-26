@@ -1,9 +1,8 @@
 import "./globals.css";
-import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "App",
-  description: "Next app",
+export const metadata = {
+  title: "AI Receptionist",
+  description: "AI receptionist demo app",
 };
 
 export default function RootLayout({

@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import { useState } from "react"
+import { useState } from "react";
 
 export default function Home() {
-  const [message, setMessage] = useState("")
+  const [message, setMessage] = useState("");
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-gray-100">
@@ -17,10 +17,13 @@ export default function Home() {
           onChange={(e) => setMessage(e.target.value)}
         />
 
-        <button className="w-full bg-blue-500 text-white p-2 rounded">
+        <button
+          className="w-full bg-blue-500 text-white p-2 rounded"
+          onClick={() => console.log("Message:", message)}
+        >
           Send
         </button>
       </div>
     </main>
-  )
+  );
 }
