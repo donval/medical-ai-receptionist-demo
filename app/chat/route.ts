@@ -1,9 +1,12 @@
-import { NextResponse } from "next/server";
+export async function POST(request: Request) {
+  const body = await request.json();
+  const message = body.message || "No message";
 
-export async function POST(req: Request) {
-  const body = await req.json();
-
-  return NextResponse.json({
-    reply: `Hi 👋 You said: ${body.message}`,
-  });
+  return new Response(
+    JSON.stringify({ reply: `You said: ${message}` }),
+    {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    }
+  );
 }
