@@ -1,37 +1,33 @@
 export async function POST(req: Request) {
-  const body = await req.json();
-
   try {
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: "gpt-4o-mini",
-        messages: [
-          {
-            role: "system",
-            content:
-              "You are a professional medical and dental receptionist. Be polite and helpful.",
-          },
-          {
-            role: "user",
-            content: body.message,
-          },
-        ],
+    // ✅ Check if API key exists (safe logging)
+    console.log("API KEY EXISTS:", !!process.env.OPENAI_API_KEY);
+
+    // Optional: log first few characters (still safe-ish)
+    if (process.env.OPENAI_API_KEY) {
+      console.log(
+        "API KEY STARTS WITH:",
+        process.env.OPENAI_API_KEY.slice(0, 5)
+      );
+    }
+
+    const body = await req.json();
+    const message = body.message;
+
+    // 🔁 Simple test response (replace later with real AI call)
+    return new Response(
+      JSON.stringify({
+        reply: "API route is working",
+        received: message,
       }),
-    });
+      { status: 200 }
+    );
+  } catch (err: any) {
+    console.error("FULL ERROR:", err);
 
-    const data = await response.json();
-
-    return Response.json({
-      reply: data?.choices?.[0]?.message?.content || "No response from AI",
-    });
-  } catch (error) {
-    return Response.json({
-      error: "Server error",
-    });
+    return new Response(
+      JSON.stringify({ error: err.message }),
+      { status: 500 }
+    );
   }
 }
