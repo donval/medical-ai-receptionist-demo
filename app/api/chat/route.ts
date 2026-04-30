@@ -2,16 +2,7 @@ import OpenAI from "openai";
 
 export async function POST(req: Request) {
   try {
-    if (!process.env.OPENAI_API_KEY) {
-      throw new Error("Missing OPENAI_API_KEY");
-    }
-
-    const client = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
-    });
-
-    const body = await req.json();
-    const message: string = body.message;
+    const { message } = await req.json();
 
     if (!message) {
       return new Response(
@@ -20,26 +11,30 @@ export async function POST(req: Request) {
       );
     }
 
-    const completion = await client.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        { role: "system", content: "You are a medical receptionist." },
-        { role: "user", content: message },
-      ],
+    const client = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
     });
 
-    const reply =
-      completion.choices[0]?.message?.content ?? "No response";
-
-    return new Response(JSON.stringify({ reply }), {
-      status: 200,
+    const response = await client.responses.create({
+      model: "gpt-4.1-mini",
+      input: message,
     });
 
-  } catch (error: any) {
-    console.error("API ERROR:", error);
+    const reply = response.output_text;
 
     return new Response(
-      JSON.stringify({ error: error.message || "Server error" }),
+      JSON.stringify({ reply: reply || "No response from AI" }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+
+  } catch (err: any) {
+    console.error("API ERROR:", err);
+
+    return new Response(
+      JSON.stringify({ error: err.message }),
       { status: 500 }
     );
   }
